@@ -9,4 +9,4 @@ class UsuarioModel(conexion.Model):
      telefono = Column(type_=types.Text, nullable=True)
      linkedinUrl = Column(name='linkedin_url', type_=types.Text)
 
-__tablename__ = 'usuarios'
+     __tablename__ = 'usuarios'
