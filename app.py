@@ -5,9 +5,22 @@ from urllib.parse import quote_plus
 from flask_migrate import Migrate
 from flask_restful import Api
 from controllers.usuario import UsuariosController, UsuarioController
+from flask_cors import CORS
+from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app, origins=['https://editor.swagger.io', 'http://mifrontend.com'], methods=['GET', 'POST', 'PUT', 'DELETE'], allow_headers=['authorization', 'content-type', 'accept'])
+
+SWAGGER_URL = '/docs'
+API_URL = '/static/documentacion_swagger.json'
+
+configuracionSwagger = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={
+    'app_name' : 'Documentacion de Directorio de Mascotas'
+})
+
+app.register_blueprint(configuracionSwagger)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:%s@localhost:5432/directorio' % quote_plus('root')
 conexion.init_app(app)
 
