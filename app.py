@@ -23,7 +23,7 @@ configuracionSwagger = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={
 app.register_blueprint(configuracionSwagger)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:%s@localhost:5432/directorio' % quote_plus('root')
-# conexion.init_app(app)
+conexion.init_app(app)
 
 Migrate(app=app, db=conexion)
 
