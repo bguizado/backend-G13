@@ -8,8 +8,10 @@ from os import environ
 from dotenv import load_dotenv
 from models import *
 from flasgger import Swagger
-from controllers import CategoriaController, RegistroController
+from controllers import CategoriaController, RegistroController, LoginController, SubirImagenController
+from flask_jwt_extended import JWTManager
 from json import load
+from datetime import timedelta
 
 load_dotenv()
 swaggerData = load(open('swagger_data.json', 'r'))
@@ -30,6 +32,15 @@ swaggerConfig = {
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']=environ.get('DATABASE_URL')
 
+app.config['JWT_SECRET_KEY']=environ.get('JWT_SECRET')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1, minutes=15)
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+JWTManager(app)
+
 Swagger(app, template=swaggerData, config=swaggerConfig)
 
 CORS(app, origins='*')
@@ -38,6 +49,7 @@ api = Api(app)
 api.add_resource(CategoriaController, '/categorias')
 api.add_resource(RegistroController,'/registro' )
 api.add_resource(LoginController, '/login' )
+api.add_resource(SubirImagenController, '/subir-imagen')
 
 conexion.init_app(app)
 
