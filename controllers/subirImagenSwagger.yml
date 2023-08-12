@@ -4,10 +4,14 @@ operationId: uploadImage
 description: Subir Imagen
 parameters:
   - in: formData
-    name: imagen
     type: file
-    description: Imagen a subir al servidor
+    name: imagen
     
+    description: Imagen a subir al servidor
+
+security:
+  - Bearer: []
+  
 responses:
   201:
     schema:

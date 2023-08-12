@@ -8,7 +8,7 @@ from os import environ
 from dotenv import load_dotenv
 from models import *
 from flasgger import Swagger
-from controllers import CategoriaController, RegistroController, LoginController, SubirImagenController
+from controllers import (CategoriaController, RegistroController, LoginController, SubirImagenController, DevolverImagenController, ProductosController, PedidosController, UsuarioController,CambiarPasswordController)
 from flask_jwt_extended import JWTManager
 from json import load
 from datetime import timedelta
@@ -50,6 +50,12 @@ api.add_resource(CategoriaController, '/categorias')
 api.add_resource(RegistroController,'/registro' )
 api.add_resource(LoginController, '/login' )
 api.add_resource(SubirImagenController, '/subir-imagen')
+api.add_resource(DevolverImagenController, '/imagenes/<nombreImagen>')
+api.add_resource(ProductosController, '/productos')
+api.add_resource(PedidosController, '/pedidos')
+api.add_resource(UsuarioController, '/perfil')
+api.add_resource(CambiarPasswordController, '/cambiar-password')
+
 
 conexion.init_app(app)
 

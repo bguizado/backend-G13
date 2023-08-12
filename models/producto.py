@@ -1,6 +1,7 @@
 from sqlalchemy import Column, types, ForeignKey
 from utilitarios import conexion
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class ProductModel(conexion.Model):
     id = Column(type_=types.Integer, primary_key=True, autoincrement= True)
@@ -13,5 +14,6 @@ class ProductModel(conexion.Model):
     stock = Column(type_=types.Integer, nullable=False)
     categoriaId = Column(ForeignKey(column='categorias.id'), nullable=True, name='categoria_id')
     
+    categoria = relationship('CategoriaModel', backref='productos')
 
     __tablename__='productos'
