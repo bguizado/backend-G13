@@ -9,7 +9,7 @@ class SubirImagenController(Resource):
     @validador_usuario_admin
     def post(self):
         """
-        file: controllers\\subirImagenSwagger.yml
+        file: controllers/subirImagenSwagger.yml
         """   
         imagen = request.files.get('imagen')
         mimetypeValidos = ['image/png', 'image/jpeg', 'image/svg+xml']
