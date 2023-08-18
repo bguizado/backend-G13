@@ -1,0 +1,3 @@
+django-admin startproject nombre_proyecto
+python manage.py runserver
+python manage.py showmigrations
