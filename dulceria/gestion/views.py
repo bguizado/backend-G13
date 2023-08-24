@@ -6,7 +6,10 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from .models import CategoriaModel
 from .serializers import CategoriaSerializer
+from .models import CategoriaModel, GolosinaModel
+from .serializers import CategoriaSerializer, GolosinaSerializer, GolosinaResponseSerializer, CategoriaResponseSerializer
 from rest_framework import status
+from math import ceil
 
 
 # Create your views here.
@@ -80,7 +83,10 @@ class CategoriaController(APIView):
             return Response ( data= {
                 'message': 'Categoria no encontrada'
             }, status=status.HTTP_404_NOT_FOUND)
-        serializador = CategoriaSerializer(instance=categoriaEncontrada)
+        
+        print(categoriaEncontrada.golosinas.all())
+
+        serializador = CategoriaResponseSerializer(instance=categoriaEncontrada)
         return Response(data={
             'content': serializador.data
         })
@@ -119,3 +125,62 @@ class CategoriaController(APIView):
         return Response(data={
             'message': 'Categoria eliminada exitosamente'
         })
+
+class GolosinasController(APIView):
+    def get(self, request: Request):
+        print(request.query_params)
+
+        page = int(request.query_params.get('page', 1))
+        perPage = int(request.query_params.get('perPage', 5))
+
+        ordering = request.query_params.get('ordering')
+        orderingType = request.query_params.get('orderingType')
+        orderingType = '-' if orderingType == 'desc' else ''
+        print(orderingType)
+
+        skip = (page -1) * perPage
+        take = perPage * page
+
+
+        if ordering:
+            golosinas = GolosinaModel.objects.order_by(orderingType + ordering).all()[skip:take]
+        else:
+            golosinas = GolosinaModel.objects.all()[skip:take]
+
+        totalGolosinas = GolosinaModel.objects.count()
+        
+        serializador = GolosinaSerializer(instance=golosinas, many=True)
+
+        pagination = helperPagination(totalGolosinas, page, perPage)
+
+        return Response(data={
+            'content': serializador.data,
+            'pagination': pagination
+        })
+    
+
+
+class GolosinaController(APIView):
+    def get(self, request: Request, id:str):
+        golosinaEncontrada = GolosinaModel.objects.filter(id=id).first()
+        if golosinaEncontrada is None:
+            return Response(data={
+                'message': 'La golosina no existe'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        serializador = GolosinaResponseSerializer(instance=golosinaEncontrada)
+        return(Response(data={
+            'content': serializador.data
+        }))
+
+def helperPagination(total: int, page: int, perPage: int):
+    itemsPerPage = perPage if total >= perPage else total
+    totalPages = ceil (total / itemsPerPage) if itemsPerPage > 0 else None
+    prevPage = page -1 if page > 1 and page <= totalPages else None
+    nextPage = page +1 if totalPages > 1 and page < totalPages else None
+    return {
+        'itemPerPage': itemsPerPage,
+        'totalPages': totalPages,
+        'prevPage': prevPage,
+        'nextPage': nextPage
+    }
