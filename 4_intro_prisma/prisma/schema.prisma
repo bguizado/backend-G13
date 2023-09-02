@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Alumno {
+  id                  String @id @db.Uuid @default(uuid())
+  nombre              String
+  apellido            String
+  correo              String @unique
+  telefonoEmergencia  String @map("telefono_emergencia")
+  grupoSanguineo      TipoGrupoSanguineo?
+  anioLectivos AnioLectivo []
+  @@map("alumnos")
+}
+
+model Grado {
+  id                  String @id @db.Uuid @default(uuid())
+  nombreNumerico      String @map("nombre_numerico")
+  nombreTexto         String @map("nombre_texto")
+  anioLectivos AnioLectivo[]
+  @@map("grados")
+}
+
+model Seccion {
+  id                  String @id @db.Uuid @default(uuid())
+  nombre              String @unique
+  anioLectivos AnioLectivo[]
+  @@map("secciones")
+}
+
+model AnioLectivo {
+  id                  String @id @db.Uuid @default(uuid())
+  anio                String
+  nivel               NivelAcademico @default(PRIMARIA)
+  alumnoId            String @map("alumno_id") @db.Uuid
+  gradoId             String @map("grado_id") @db.Uuid
+  seccionId           String @map("seccion_id") @db.Uuid
+
+  //CREAR RELACIONES
+  alumno              Alumno @relation(fields: [alumnoId], references: [id])
+  grado               Grado @relation(fields: [gradoId], references: [id])
+  seccion             Seccion @relation(fields: [seccionId], references: [id])
+
+  @@map("anio_lectivos")
+}
+
+enum NivelAcademico {
+  PRIMARIA
+  SECUNDARIA
+}
+
+enum TipoGrupoSanguineo {
+  A_POSITIVO
+  A_NEGATIVO
+  B_POSITIVO
+  B_NEGATIVO
+  AB_POSITIVO
+  AB_NEGATIVO
+  O_POSITIVO
+  O_NEGATIVO
+}

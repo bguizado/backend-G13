@@ -1,0 +1,22 @@
+{
+  "name": "intro_prisma",
+  "version": "1.0.0",
+  "description": "Proyecto con node y prisma",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "node",
+    "prisma"
+  ],
+  "author": "brando guizado",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.2.0",
+    "prisma": "^5.2.0"
+  }
+}
