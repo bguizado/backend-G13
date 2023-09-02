@@ -17,7 +17,7 @@ model Alumno {
   correo              String @unique
   telefonoEmergencia  String @map("telefono_emergencia")
   grupoSanguineo      TipoGrupoSanguineo?
-  anioLectivos AnioLectivo []
+  anioLectivos        AnioLectivo []
   @@map("alumnos")
 }
 
@@ -25,14 +25,14 @@ model Grado {
   id                  String @id @db.Uuid @default(uuid())
   nombreNumerico      String @map("nombre_numerico")
   nombreTexto         String @map("nombre_texto")
-  anioLectivos AnioLectivo[]
+  anioLectivos        AnioLectivo[]
   @@map("grados")
 }
 
 model Seccion {
   id                  String @id @db.Uuid @default(uuid())
   nombre              String @unique
-  anioLectivos AnioLectivo[]
+  anioLectivos        AnioLectivo[]
   @@map("secciones")
 }
 
